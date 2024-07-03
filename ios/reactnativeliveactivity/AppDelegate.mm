@@ -2,6 +2,9 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
+#import "YourProjectName-Swift.h"
+#import <ActivityKit/ActivityKit.h>
+#import <SwiftUI/SwiftUI.h>
 
 @implementation AppDelegate
 
@@ -13,7 +16,20 @@
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
 
+  if (@available(iOS 16.1, *)) {
+    [self registerLiveActivity];
+  }
+
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+
+- (void)registerLiveActivity {
+  if (@available(iOS 16.1, *)) {
+    [ActivityRegistry<ActivityAttributes> registrationFor:@"Activity" view:^(ActivityViewContext<ActivityAttributes> *context) {
+      ActivityView *activityView = [[ActivityView alloc] initWithContext:context];
+      return activityView;
+    }];
+  }
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
